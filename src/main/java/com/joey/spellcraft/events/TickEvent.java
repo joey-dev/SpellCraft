@@ -6,6 +6,7 @@ import com.joey.spellcraft.utility.SpellCraftKeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,12 +18,12 @@ public class TickEvent {
     private static boolean PreviousSpellKeyPressed = false;
 
     @SubscribeEvent
-    public static void onTickEvent(net.minecraftforge.event.TickEvent.ClientTickEvent clientTickEvent) {
-        if (clientTickEvent.phase == net.minecraftforge.event.TickEvent.Phase.END) {
+    public static void onTickEvent(net.minecraftforge.event.TickEvent.PlayerTickEvent playerTickEvent) {
+        if (playerTickEvent.phase == net.minecraftforge.event.TickEvent.Phase.END) {
             return;
         }
 
-        PlayerEntity player = Minecraft.getInstance().player;
+        PlayerEntity player = playerTickEvent.player;
 
         if (player == null) {
             return;
@@ -31,9 +32,9 @@ public class TickEvent {
         if (Minecraft.getInstance().isGameFocused() && SpellCraftKeyBindings.NEXT_SPELL.isKeyDown()) {
             if (!NextSpellKeyPressed) {
                 NextSpellKeyPressed = true;
-                Item wand = player.getHeldItemMainhand().getItem();
-                if (wand instanceof BasicWand) {
-                    ((BasicWand) wand).nextSpell();
+                ItemStack wand = player.getHeldItemMainhand();
+                if (wand.getItem() instanceof BasicWand) {
+                    BasicWand.nextSpell(wand);
                 }
             }
         } else if (NextSpellKeyPressed) {
@@ -43,9 +44,9 @@ public class TickEvent {
         if (Minecraft.getInstance().isGameFocused() && SpellCraftKeyBindings.PREVIOUS_SPELL.isKeyDown()) {
             if (!PreviousSpellKeyPressed) {
                 PreviousSpellKeyPressed = true;
-                Item wand = player.getHeldItemMainhand().getItem();
-                if (wand instanceof BasicWand) {
-                    ((BasicWand) wand).previousSpell();
+                ItemStack wand = player.getHeldItemMainhand();
+                if (wand.getItem() instanceof BasicWand) {
+                    BasicWand.previousSpell(wand);
                 }
             }
         } else if (PreviousSpellKeyPressed) {
