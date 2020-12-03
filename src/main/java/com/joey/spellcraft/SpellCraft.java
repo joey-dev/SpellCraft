@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 public class SpellCraft
 {
     public static  final String MOD_ID = "spellcraft";
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
 
     public SpellCraft() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
