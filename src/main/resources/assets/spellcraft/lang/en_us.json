@@ -1,4 +1,7 @@
 {
   "item.spellcraft.basic_wand": "Basic Wand",
+  "key.categories.spellcraft": "SpellCraft",
+  "key.spellcraft.previous_spell": "Previous Spell",
+  "key.spellcraft.next_spell": "Next Spell",
   "itemGroup.spellcraft": "SpellCraft"
 }

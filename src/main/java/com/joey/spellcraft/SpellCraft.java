@@ -1,6 +1,7 @@
 package com.joey.spellcraft;
 
 import com.joey.spellcraft.init.ModItems;
+import com.joey.spellcraft.utility.SpellCraftKeyBindings;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -21,6 +22,8 @@ public class SpellCraft
     public SpellCraft() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+
+        new SpellCraftKeyBindings();
 
         ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
