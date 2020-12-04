@@ -9,6 +9,10 @@ public class WandUtility {
         return (player.getHeldItemMainhand().getItem() instanceof ISpellCastingItem);
     }
 
+    public static boolean stackItemIsSpellCastingItem(ItemStack stack) {
+        return (stack.getItem() instanceof ISpellCastingItem);
+    }
+
     public static ItemStack getPlayerSpellCastingItemStack(PlayerEntity player) {
         return player.getHeldItemMainhand();
     }

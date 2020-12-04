@@ -22,6 +22,9 @@ public class TickEvent {
         }
 
         PlayerEntity player = playerTickEvent.player;
+        if (player.world.isRemote) {
+            return;
+        }
 
         if (player == null || !WandUtility.playerIsHoldingASpellCastingItem(player)) {
             return;

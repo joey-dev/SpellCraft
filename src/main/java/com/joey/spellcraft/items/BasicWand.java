@@ -31,10 +31,10 @@ public class BasicWand extends Item implements ISpellCastingItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        WandHelper.onCastSpell(worldIn, playerIn);
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+        WandHelper.onCastSpell(world, player, hand);
 
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.onItemRightClick(world, player, hand);
     }
 
     public Spell[] getSpells(ItemStack wand) {

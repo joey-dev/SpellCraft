@@ -6,6 +6,7 @@ import com.joey.spellcraft.spells.Spells;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class WandHelper {
@@ -29,9 +30,11 @@ public class WandHelper {
         setSpells(stack, spellsOnWand);
     }
 
-    public static void onCastSpell(World world, PlayerEntity player) {
+    public static void onCastSpell(World world, PlayerEntity player, Hand hand) {
 
-        if (!world.isRemote && WandUtility.playerIsHoldingASpellCastingItem(player)) {
+        ItemStack stack = player.getHeldItem(hand);
+
+        if (!world.isRemote && WandUtility.stackItemIsSpellCastingItem(stack)) {
             ItemStack wand = WandUtility.getPlayerSpellCastingItemStack(player);
 
             SpellCraft.LOGGER.info("Spell id: " + getCurrentSpellId(wand));
@@ -74,6 +77,8 @@ public class WandHelper {
         } else {
             setCurrentSpellId(wand, currentSpellId + 1);
         }
+
+        SpellCraft.LOGGER.info("Current spell id:" + getCurrentSpellId(wand));
     }
 
     public static void previousSpell(ItemStack wand) {
@@ -85,5 +90,7 @@ public class WandHelper {
         } else {
             setCurrentSpellId(wand, currentSpellId - 1);
         }
+
+        SpellCraft.LOGGER.info("Current spell id:" + getCurrentSpellId(wand));
     }
 }
