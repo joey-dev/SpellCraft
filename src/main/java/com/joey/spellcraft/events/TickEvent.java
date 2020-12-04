@@ -1,13 +1,11 @@
 package com.joey.spellcraft.events;
 
 import com.joey.spellcraft.SpellCraft;
-import com.joey.spellcraft.items.BasicWand;
 import com.joey.spellcraft.utility.SpellCraftKeyBindings;
+import com.joey.spellcraft.utility.WandUtility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,17 +23,17 @@ public class TickEvent {
 
         PlayerEntity player = playerTickEvent.player;
 
-        if (player == null) {
+        if (player == null || !WandUtility.playerIsHoldingASpellCastingItem(player)) {
             return;
         }
+
+        ItemStack wand = WandUtility.getPlayerSpellCastingItemStack(player);
 
         if (Minecraft.getInstance().isGameFocused() && SpellCraftKeyBindings.NEXT_SPELL.isKeyDown()) {
             if (!NextSpellKeyPressed) {
                 NextSpellKeyPressed = true;
-                ItemStack wand = player.getHeldItemMainhand();
-                if (wand.getItem() instanceof BasicWand) {
-                    BasicWand.nextSpell(wand);
-                }
+
+                WandUtility.nextSpell(wand);
             }
         } else if (NextSpellKeyPressed) {
             NextSpellKeyPressed = false;
@@ -44,10 +42,7 @@ public class TickEvent {
         if (Minecraft.getInstance().isGameFocused() && SpellCraftKeyBindings.PREVIOUS_SPELL.isKeyDown()) {
             if (!PreviousSpellKeyPressed) {
                 PreviousSpellKeyPressed = true;
-                ItemStack wand = player.getHeldItemMainhand();
-                if (wand.getItem() instanceof BasicWand) {
-                    BasicWand.previousSpell(wand);
-                }
+                WandUtility.previousSpell(wand);
             }
         } else if (PreviousSpellKeyPressed) {
             PreviousSpellKeyPressed = false;

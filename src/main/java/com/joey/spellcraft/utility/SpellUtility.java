@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
-public class StaffUtility {
+public class SpellUtility {
 
     public static List<Entity> getEntitiesInAimDirection(int range, PlayerEntity player, World world,
                                                          @Nullable Predicate<? super Entity> predicate) {

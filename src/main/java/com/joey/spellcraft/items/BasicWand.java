@@ -1,27 +1,19 @@
 package com.joey.spellcraft.items;
 
 import com.joey.spellcraft.SpellCraft;
-import com.joey.spellcraft.init.ModItems;
-import com.joey.spellcraft.spells.FlameThrowerSpell;
-import com.joey.spellcraft.spells.ToggleDoorSpell;
-import net.minecraft.command.arguments.NBTTagArgument;
+import com.joey.spellcraft.spells.Spell;
+import com.joey.spellcraft.utility.WandHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.IntArrayNBT;
-import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IntArray;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BasicWand extends Item {
-    public int maxAmountOfSpells = 10;
+public class BasicWand extends Item implements ISpellCastingItem {
+    public int maxAmountOfSpells = 5;
+    public int addedRange = 0;
 
     public BasicWand() {
         super(
@@ -32,87 +24,41 @@ public class BasicWand extends Item {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        if (!worldIn.isRemote) {
-            SpellCraft.LOGGER.info("Basic wand has been created.");
+    public void onCreated(ItemStack stack, World world, PlayerEntity player) {
+        WandHelper.onCreateCastingItem(stack, world, player);
 
-            if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
-            }
-
-            int[] spells = {};
-            setSpells(stack, spells);
-            setCurrentSpellIndex(stack, 0);
-
-            tempSetSpells(stack);
-        }
-
-        super.onCreated(stack, worldIn, playerIn);
-    }
-
-    private void tempSetSpells(ItemStack stack) {
-        int[] spellsOnWand = {1, 0};
-
-        setSpells(stack, spellsOnWand);
+        super.onCreated(stack, world, player);
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (!worldIn.isRemote && playerIn.getHeldItemMainhand().getItem() == ModItems.BASIC_WAND.get()) {
-            ItemStack wand = playerIn.getHeldItemMainhand();
-
-            int currentSpellIndex = getCurrentSpellIndex(wand);
-
-            SpellCraft.LOGGER.info("Current spell index: " + currentSpellIndex);
-            switch (currentSpellIndex) {
-                case 0:
-                    FlameThrowerSpell.run(playerIn, worldIn);
-                    break;
-                case 1:
-                    ToggleDoorSpell.run(playerIn, worldIn);
-                    break;
-            }
-        }
+        WandHelper.onCastSpell(worldIn, playerIn);
 
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
-    private static int[] getSpells(ItemStack wand) {
-        return wand.getOrCreateTag().getIntArray("spellsOnWand");
+    public Spell[] getSpells(ItemStack wand) {
+        return WandHelper.getSpells(wand);
     }
 
-    private static void setSpells(ItemStack wand, int[] spells) {
-        wand.getOrCreateTag().putIntArray("spellsOnWand", spells);
+    public void setSpells(ItemStack wand, int[] spells) {
+        WandHelper.setSpells(wand, spells);
     }
 
-    private static int getCurrentSpellIndex(ItemStack wand) {
-        return wand.getOrCreateTag().getInt("selectedSpellIndex");
+    public int getCurrentSpellId(ItemStack wand) {
+        return WandHelper.getCurrentSpellId(wand);
     }
 
-    private static void setCurrentSpellIndex(ItemStack wand, int spellIndex) {
-        wand.getOrCreateTag().putInt("selectedSpellIndex", spellIndex);
+    public void setCurrentSpellId(ItemStack wand, int spellId) {
+        WandHelper.setCurrentSpellId(wand, spellId);
     }
 
-    public static void nextSpell(ItemStack wand) {
-        int currentSpellIndex = getCurrentSpellIndex(wand);
-        int[] spells = getSpells(wand);
-
-        if (currentSpellIndex + 1 >= spells.length) {
-            setCurrentSpellIndex(wand, 0);
-        } else {
-            setCurrentSpellIndex(wand, currentSpellIndex + 1);
-        }
+    public void nextSpell(ItemStack wand) {
+        WandHelper.nextSpell(wand);
     }
 
-    public static void previousSpell(ItemStack wand) {
-        int currentSpellIndex = getCurrentSpellIndex(wand);
-        int[] spells = getSpells(wand);
-
-        if (currentSpellIndex - 1 < 0) {
-            setCurrentSpellIndex(wand, spells.length - 1);
-        } else {
-            setCurrentSpellIndex(wand, currentSpellIndex - 1);
-        }
+    public void previousSpell(ItemStack wand) {
+        WandHelper.previousSpell(wand);
     }
 
 }

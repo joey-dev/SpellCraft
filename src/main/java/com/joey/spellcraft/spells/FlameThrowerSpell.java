@@ -1,16 +1,29 @@
 package com.joey.spellcraft.spells;
 
-import com.joey.spellcraft.utility.StaffUtility;
+import com.joey.spellcraft.items.ISpellCastingItem;
+import com.joey.spellcraft.utility.SpellUtility;
+import com.joey.spellcraft.utility.WandUtility;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class FlameThrowerSpell {
-    public static void run(PlayerEntity playerIn, World worldIn) {
+public class FlameThrowerSpell extends Spell {
+
+    FlameThrowerSpell(String name, String className, int id) {
+        super(name, className, id);
+    }
+
+    public void run(PlayerEntity player, World world) {
         int maxRange = 10;
         int burnDuration = 5;
 
-        StaffUtility.getEntitiesInAimDirection(maxRange, playerIn, worldIn, entity -> entity instanceof LivingEntity)
+        ItemStack wandStack =  WandUtility.getPlayerSpellCastingItemStack(player);
+        ISpellCastingItem wand = (ISpellCastingItem) wandStack.getItem();
+
+        int maxRangeWithAddedRange = maxRange + wand.addedRange;
+
+        SpellUtility.getEntitiesInAimDirection(maxRangeWithAddedRange, player, world, entity -> entity instanceof LivingEntity)
                 .forEach(entity ->
                         entity.setFire(burnDuration));
     }
